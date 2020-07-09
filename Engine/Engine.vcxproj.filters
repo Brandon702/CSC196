@@ -38,6 +38,9 @@
     <ClInclude Include="Math\Vector2.h">
       <Filter>Math</Filter>
     </ClInclude>
+    <ClInclude Include="Math\Transform.h">
+      <Filter>Math</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Engine.cpp">
@@ -50,6 +53,12 @@
       <Filter>Graphics</Filter>
     </ClCompile>
     <ClCompile Include="Math\Vector2.cpp">
+      <Filter>Math</Filter>
+    </ClCompile>
+    <ClCompile Include="Math\Color.cpp">
+      <Filter>Math</Filter>
+    </ClCompile>
+    <ClCompile Include="Math\Transform.cpp">
       <Filter>Math</Filter>
     </ClCompile>
   </ItemGroup>

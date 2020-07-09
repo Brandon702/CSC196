@@ -1,6 +1,7 @@
 #pragma once
-
+#include <string>
 #include <Windows.h>
+
 namespace nc
 {
 	struct Color
@@ -36,13 +37,15 @@ namespace nc
 		Color& operator *= (float s) { r += s; g += s; b += s; return *this; }
 		Color& operator /= (float s) { r += s; g += s; b += s; return *this; }
 
+		friend std::istream& operator >> (std::istream& stream, Color& c);
 
-		COLORREF Pack888() const;
+		COLORREF Pack888() const ;
 		operator COLORREF() const { return Pack888(); }
 
+		
 	};
 
-	COLORREF Color::Pack888() const
+	inline COLORREF Color::Pack888() const
 	{
 		//BYTE = 8 bits
 		//WORD = 16 bits
