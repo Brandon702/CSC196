@@ -2,9 +2,9 @@
 #include "core.h"
 #include <vector>
 #include <string>
-#include "..\Math\Color.h"
-#include "..\Math\Vector2.h"
-#include "..\Math\transform.h"
+#include "../Math/Color.h"
+#include "../Math/Vector2.h"
+#include "../Math/Transform.h"
 
 namespace nc
 {

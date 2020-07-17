@@ -1,5 +1,6 @@
 #include "pch.h"
 #include "Shape.h"
+#include "Math/Matrix33.h"
 #include <fstream>
 
 namespace nc
@@ -16,8 +17,13 @@ namespace nc
 				//Read color
 			stream >> m_color;
 
-				//Read points
-			while (!stream.eof())
+			//Read the number of points
+			std::string line;
+			std::getline(stream, line);
+			size_t size = stoi(line);
+
+			//Read points
+			for (size_t i = 0; i < size; i++)
 			{
 				Vector2 point;
 				stream >> point;
@@ -29,25 +35,26 @@ namespace nc
 		}
 		return success;
 	}
-	void Shape::Draw(Core::Graphics& graphics, Vector2 position, float scale = 1.0f, float angle = 0.0f) 
+	void Shape::Draw(Core::Graphics& graphics, Vector2 position, float scale, float angle) 
         {
-            graphics.SetColor(m_color.Pack888());
+            graphics.SetColor(m_color);
+
+			nc::Matrix33 mxScale;
+			mxScale.Scale(scale);
+			nc::Matrix33 mxRotate;
+			mxRotate.Rotate(angle);
+			nc::Matrix33 mxTranslate;
+			mxTranslate.Translate(position);
+
+			nc::Matrix33 mx = mxScale * mxRotate;
+
             for (size_t i = 0; i < m_points.size() - 1; i++)
             {
-                Vector2 p1 = { m_points[i].x, m_points[i].y * -1 };
-                Vector2 p2 = { m_points[i + 1].x, m_points[i + 1].y * -1 };
-                //transform
-
-                //scale
-                p1 = p1 * scale;
-                p2 = p2 * scale;
-                //rotate
-                p1 = Vector2::Rotate(p1, angle);
-                p2 = Vector2::Rotate(p2, angle);
-                //translate
-                p1 += position;
-                p2 += position;
-
+				nc::Vector2 p1 = m_points[i];
+				nc::Vector2 p2 = m_points[i + 1];
+               //Scale/Rotate
+				p1 = p1 * mx;
+				p2 = p2 * mx;
 
 
                 graphics.DrawLine(p1.x, p1.y, p2.x, p2.y);
@@ -55,6 +62,17 @@ namespace nc
         }
 
 	void Shape::Draw(Core::Graphics& graphics, const Transform& transform) {
-		Draw(graphics, transform.position, transform.scale, transform.angle);
+		
+		graphics.SetColor(m_color);
+		for (size_t i = 0; i < m_points.size() - 1; i++)
+		{
+			//Draw(graphics, transform.position, transform.scale, transform.angle);
+			nc::Vector2 p1 = m_points[i];
+			nc::Vector2 p2 = m_points[i + 1];
+			//Scale/Rotate/Translate
+			p1 = p1 * transform.matrix;
+			p2 = p2 * transform.matrix;
+			graphics.DrawLine(p1.x, p1.y, p2.x, p2.y);
+		}
 	}
 }

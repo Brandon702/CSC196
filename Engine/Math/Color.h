@@ -22,10 +22,10 @@ namespace nc
 		Color operator * (const Color& c) const { return { r * c.r, g * c.g, b * c.b }; }
 		Color operator / (const Color& c) const { return { r / c.r, g / c.g, b / c.b }; }
 
-		Color operator + (float s) const { return Color{ r + r, g + g, b + b }; }
-		Color operator - (float s) const { return Color{ r - r, g - g, b - b }; }
-		Color operator * (float s) const { return Color{ r * r, g * g, b * b }; }
-		Color operator / (float s) const { return Color{ r / r, g / g, b / b }; }
+		Color operator + (float s) const { return Color{ r + s, g + s, b + s }; }
+		Color operator - (float s) const { return Color{ r - s, g - s, b - s }; }
+		Color operator * (float s) const { return Color{ r * s, g * s, b * s }; }
+		Color operator / (float s) const { return Color{ r / s, g / s, b / s }; }
 
 		Color& operator += (const Color& c) { r += c.r; g += c.g; b += c.b; return *this; }
 		Color& operator -= (const Color& c) { r -= c.r; g -= c.g; b -= c.b; return *this; }
@@ -33,9 +33,9 @@ namespace nc
 		Color& operator /= (const Color& c) { r /= c.r; g /= c.g; b /= c.b; return *this; }
 
 		Color& operator += (float s) { r += s; g += s; b += s; return *this; }
-		Color& operator -= (float s) { r += s; g += s; b += s; return *this; }
-		Color& operator *= (float s) { r += s; g += s; b += s; return *this; }
-		Color& operator /= (float s) { r += s; g += s; b += s; return *this; }
+		Color& operator -= (float s) { r -= s; g -= s; b -= s; return *this; }
+		Color& operator *= (float s) { r *= s; g *= s; b *= s; return *this; }
+		Color& operator /= (float s) { r /= s; g /= s; b /= s; return *this; }
 
 		friend std::istream& operator >> (std::istream& stream, Color& c);
 
