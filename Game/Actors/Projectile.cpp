@@ -25,12 +25,11 @@ void Projectile::Update(float dt)
 	m_transform.position = m_transform.position + (velocity * dt);
 	m_transform.Update();
 }
-/*
+
 void Projectile::OnCollision(Actor* actor)
 {
 	if (actor->GetType() == eType::ENEMY)
 	{
-		m_destroy = true;
+		m_destory = true;
 	}
 }
-*/

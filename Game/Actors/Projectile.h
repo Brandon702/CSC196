@@ -7,6 +7,8 @@ public:
 	Projectile() {}
 	virtual eType GetType() override { return eType::PROJECTILE; }
 
+	virtual void OnCollision(Actor* actor) override;
+
 	virtual bool Load(const std::string& filename) override;
 	virtual void Update(float dt) override;
 

@@ -15,6 +15,6 @@ protected:
 	float m_thrust{ 200.0f };
 	float m_rotationRate{ 0 };
 	float m_fireTimer{ 0 };
-	float m_fireRate{ 100.0f };
+	float m_fireRate{ 0.3f };
 	nc::Vector2 m_velocity;
 };

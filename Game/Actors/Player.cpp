@@ -24,6 +24,7 @@ bool Player::Load(const std::string& filename)
 
 void Player::Update(float dt)
 {
+	m_fireTimer += dt;
 	if (Core::Input::IsPressed(VK_SPACE) && m_fireTimer >= m_fireRate)
 	{
 		m_fireTimer = 0;

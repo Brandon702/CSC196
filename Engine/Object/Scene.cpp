@@ -26,12 +26,12 @@ namespace nc
 		//actors -> (actor) (actor) (actor) (actor)
 		//		    (actor) (actor) (actor) (actor)
 		std::vector<Actor*> actors{ m_actors.begin(), m_actors.end() };
-		for (size_t i = 0; i < actors.size; i++)
+		for (size_t i = 0; i < actors.size(); i++)
 		{
 			for (size_t j = i + 1; j < actors.size(); j++)
 			{
 				float distance = nc::Vector2::Distance(actors[i]->GetTransform().position, actors[j]->GetTransform().position);
-				if (distance <= 10)
+				if (distance <= 30)
 				{
 					actors[i]->OnCollision(actors[j]);
 					actors[j]->OnCollision(actors[i]);

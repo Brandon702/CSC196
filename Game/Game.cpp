@@ -1,6 +1,5 @@
 /*
 TODO:
-Fix program
 */
 #include "core.h"
 #include "Math/Math.h"
@@ -15,7 +14,6 @@ Fix program
 #include <string>
 #include <list>
 
-std::list<nc::Actor*> sceneActors;
 nc::Scene scene;
 nc::ParticleSystem particleSystem;
 
@@ -25,16 +23,6 @@ DWORD deltaTime;
 float roundTime{ 0 };
 bool gameOver = { false };
 float spawnTimer{ 0 };
-
-void removeActor(nc::Actor* actor)
-{
-	auto iter = std::find(sceneActors.begin(), sceneActors.end(), actor);
-	if (iter != sceneActors.end())
-	{
-		delete* iter;
-		sceneActors.erase(iter);
-	}
-}
 
 bool Update(float dt) //dt = (1/60) = 0.1667 | (1/90) = 0.0111
 {
@@ -65,14 +53,6 @@ bool Update(float dt) //dt = (1/60) = 0.1667 | (1/90) = 0.0111
 	*/
 	
 	bool quit = Core::Input::IsPressed(Core::Input::KEY_ESCAPE);
-	
-	int x, y;
-	Core::Input::GetMousePos(x, y);
-
-	for (nc::Actor* actor : sceneActors)
-	{
-		actor->Update(dt);
-	}
 
 	Player* player = scene.GetActor<Player>();
 	particleSystem.Create(player->GetTransform().position, player->GetTransform().angle + nc::PI, 10, 1, 1, nc::Color(1, 0.5, 0), 100, 200);
@@ -85,7 +65,7 @@ bool Update(float dt) //dt = (1/60) = 0.1667 | (1/90) = 0.0111
 		nc::Color colors[] = { nc::Color::white, nc::Color::red, nc::Color::green, {1,0.5,0 } };
 		nc::Color color = colors[rand() % 4];
 
-		particleSystem.Create(player->GetTransform().position, player->GetTransform().angle + nc::PI, 180, 40, 4, color, 100, 200);
+		particleSystem.Create({x,y}, 0, 180, 40, 1.5, color, 100, 200);
 	}
 
 	scene.Update(dt);
@@ -100,26 +80,21 @@ void Draw(Core::Graphics& graphics)
 	graphics.DrawString(10, 10, std::to_string(frameTime).c_str());
 	graphics.DrawString(10, 25, std::to_string(1.0f/frameTime).c_str());
 	graphics.DrawString(10, 40, std::to_string(deltaTime/1000.f).c_str());
+	if (gameOver) graphics.DrawString(800, 450, "Game Over");
 	
 	particleSystem.Draw(graphics);
 	scene.Draw(graphics);
 	
-	if (gameOver) graphics.DrawString(800, 450, "Game Over");
-
-	for (nc::Actor* actor : sceneActors)
-	{
-		actor->Draw(graphics);
-	}
 }
 
 int main()
 {
+	scene.Startup();
+	particleSystem.Startup();
 	// Initialize
 	nc::Actor* player = new Player;
-	Player* e = dynamic_cast<Player*>(player);
 	player->Load("player.txt");
-	sceneActors.push_back(player);
-	particleSystem.Startup();
+	scene.AddActor(player);
 
 	for (size_t i = 0; i < 3; i++)
 	{
@@ -129,7 +104,7 @@ int main()
 		enemy->SetTarget(player);
 		enemy->SetSpeed(nc::random(40, 90));
 		actor->GetTransform().position = nc::Vector2{ nc::random(0, 1600), nc::random(0, 900) };
-		sceneActors.push_back(actor);
+		scene.AddActor(actor);
 	}
 
 
