@@ -15,5 +15,6 @@ public:
 	void SetSpeed(float speed) { m_speed = speed; }
 
 protected:
-	float m_speed{ 300.0f };
+	float m_speed{ 400.0f };
+	float m_lifetime{ 4 };
 };

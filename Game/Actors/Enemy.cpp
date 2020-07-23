@@ -1,5 +1,6 @@
 #include "Enemy.h"
 #include "Math/Math.h"
+#include "Graphics/ParticleSystem.h"
 #include <fstream>
 
 bool Enemy::Load(const std::string& filename)
@@ -36,5 +37,10 @@ void Enemy::OnCollision(Actor* actor)
 	if (actor->GetType() == eType::PROJECTILE)
 	{
 		m_destory = true;
+
+		nc::Color colors[] = { nc::Color::white, nc::Color::red, nc::Color::green, {1,0.5,0 } };
+		nc::Color color = colors[rand() % 4];
+		g_particleSystem.Create({ m_transform.position }, 0, 180, 40, 1.5, color, 100, 200);
+
 	}
 }

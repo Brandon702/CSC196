@@ -2,6 +2,7 @@
 #include "Math/Math.h"
 #include "Projectile.h"
 #include "Object/Scene.h"
+#include "Graphics/ParticleSystem.h"
 #include <fstream>
 
 bool Player::Load(const std::string& filename)
@@ -35,7 +36,7 @@ void Player::Update(float dt)
 		m_scene->AddActor(projectile);
 	}
 
-	nc::Vector2 force;
+	nc::Vector2 force; // 0,0
 	if (Core::Input::IsPressed('W')) { force = nc::Vector2::forward * m_thrust; }
 	force = nc::Vector2::Rotate(force, m_transform.angle);
 
@@ -61,6 +62,11 @@ void Player::Update(float dt)
 
 	if (Core::Input::IsPressed('Q')) m_transform.angle -= dt * nc::DegreesToRadians(360.0f);
 	if (Core::Input::IsPressed('E')) m_transform.angle += dt * nc::DegreesToRadians(360.0f);
+
+	if (force.LengthSqr() > 0)
+	{
+		g_particleSystem.Create(m_transform.position, m_transform.angle + nc::PI, 10, 1, 1, nc::Color(1, 0.5, 0), 100, 200);
+	}
 
 	m_transform.Update();
 }
