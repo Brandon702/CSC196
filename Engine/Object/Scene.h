@@ -2,6 +2,8 @@
 #include "core.h"
 #include "pch.h"
 
+class Game;
+
 namespace nc
 {
 	class Scene
@@ -42,8 +44,13 @@ namespace nc
 
 		void AddActor(class Actor* actor);
 		void RemoveActor(class Actor* object);
+		void RemoveAllActors();
+
+		void SetGame(Game* game) { m_game = game; }
+		Game* GetGame() { return m_game; }
 
 	private:
+		Game* m_game;
 		std::list<class Actor*> m_actors;
 	};
 }

@@ -2,7 +2,9 @@
 #include "Math/Math.h"
 #include "Projectile.h"
 #include "Object/Scene.h"
+#include "../Game.h"
 #include "Graphics/ParticleSystem.h"
+#include "Math/Random.h"
 #include <fstream>
 
 bool Player::Load(const std::string& filename)
@@ -42,7 +44,7 @@ void Player::Update(float dt)
 
 	//force = force + nc::Vector2{ 0, 100 }; //Gravity
 	//Central Gravity
-	nc::Vector2 direction = nc::Vector2{ 800, 450 } - m_transform.position;
+	nc::Vector2 direction = nc::Vector2{ 800, 450 } -m_transform.position;
 	if (direction.Length() <= 200.0f)
 	{
 		float strength = 1.0f - (direction.Length() / 200.0f);
@@ -68,5 +70,22 @@ void Player::Update(float dt)
 		g_particleSystem.Create(m_transform.position, m_transform.angle + nc::PI, 10, 1, 1, nc::Color(1, 0.5, 0), 100, 200);
 	}
 
+	if (Core::Input::IsPressed('F') && !m_prevButtonPress)
+	{
+		m_transform.position = nc::Vector2{ nc::random(0,1600), nc::random(0,900) };
+		m_transform.angle = nc::random(0, nc::TWO_PI);
+	}
+
+	m_prevButtonPress = Core::Input::IsPressed('F');
+
 	m_transform.Update();
+}
+
+void Player::OnCollision(Actor* actor)
+{
+	if (actor->GetType() == eType::ENEMY)
+	{
+		//m_destory = true;
+		m_scene->GetGame()->SetState(Game::eState::GAME_OVER);
+	}
 }
