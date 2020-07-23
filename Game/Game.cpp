@@ -54,13 +54,14 @@ bool Game::Update(float dt)
 
 	int x, y;
 	Core::Input::GetMousePos(x, y);
-
+	/*
 	if (Core::Input::IsPressed(Core::Input::BUTTON_LEFT))
 	{
 		nc::Color colors[] = { nc::Color::white, nc::Color::red, nc::Color::green, {1,0.5,0 } };
 		nc::Color color = colors[rand() % 4];
 		g_particleSystem.Create({ x,y }, 0, 180, 40, 1.5, color, 100, 200);
 	}
+	*/
 
 	m_scene.Update(dt);
 	g_particleSystem.Update(dt);
