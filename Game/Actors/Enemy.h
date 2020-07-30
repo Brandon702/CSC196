@@ -15,8 +15,10 @@ public:
 
 	void SetTarget(Actor* actor) { m_target = actor; }
 	void SetSpeed(float speed) { m_speed = speed; }
+	void SetScore(int scoreValue) { m_value = scoreValue; }
 
 protected:
 	float m_speed{ 180.0f };
-	Actor* m_target{ nullptr };;
+	Actor* m_target{ nullptr };
+	int m_value{ 50 };
 };

@@ -11,6 +11,8 @@ public:
 		TITLE,
 		START_GAME,
 		GAME,
+		PLAYER_DEAD,
+		GAME_WAIT,
 		GAME_OVER
 	};
 
@@ -27,7 +29,8 @@ protected:
 	eState m_state{ eState::TITLE };
 
 	int m_score{ 0 };
-	int m_live{ 3 };
+	int m_lives{ 3 };
+	int m_value{ 50 };
 	int m_highScore{ 0 };
 
 	nc::Scene m_scene;

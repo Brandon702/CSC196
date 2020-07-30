@@ -1,6 +1,7 @@
 #include "Enemy.h"
 #include "Math/Math.h"
 #include "Graphics/ParticleSystem.h"
+#include "Audio/AudioSystem.h"
 #include "Object/Scene.h"
 #include "../Game.h"
 #include <fstream>
@@ -25,7 +26,8 @@ bool Enemy::Load(const std::string& filename)
 
 void Enemy::Update(float dt)
 {
-	nc::Vector2 direction = m_target->GetTransform().position - m_transform.position;
+	nc::Vector2 targetPosition = (m_target) ? m_target->GetTransform().position : nc::Vector2{ 800, 450 };
+	nc::Vector2 direction = targetPosition - m_transform.position;
 	direction.Normalize();
 	nc::Vector2 velocity = direction * m_speed;
 	m_transform.position = m_transform.position + (velocity * dt);
@@ -38,10 +40,11 @@ void Enemy::OnCollision(Actor* actor)
 {
 	if (actor->GetType() == eType::PROJECTILE)
 	{
-		m_destory = true;
+		g_audioSystem.PlayAudio("Explosion");
+		m_destroy = true;
 
 		//set game points / score
-		m_scene->GetGame()->AddPoints(100);
+		m_scene->GetGame()->AddPoints(m_value);
 
 		nc::Color colors[] = { nc::Color::white, nc::Color::red, nc::Color::green, {1,0.5,0 } };
 		nc::Color color = colors[rand() % 4];

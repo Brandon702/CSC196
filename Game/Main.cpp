@@ -1,8 +1,10 @@
 #include "core.h"
 #include "Game.h"
 #include <time.h>
+#include "Audio/AudioSystem.h"
 
 Game game;
+
 
 bool Update(float dt) //dt = (1/60) = 0.1667 | (1/90) = 0.0111
 {
@@ -28,6 +30,7 @@ int main()
 	Core::GameLoop();
 	Core::Shutdown();
 
+	g_audioSystem.Shutdown();
 	//g_particleSystem.Shutdown();
 	//scene.Shutdown();
 }

@@ -1,9 +1,11 @@
 #include "Player.h"
+#include "Enemy.h"
 #include "Math/Math.h"
 #include "Projectile.h"
 #include "Object/Scene.h"
 #include "../Game.h"
 #include "Graphics/ParticleSystem.h"
+#include "Audio/AudioSystem.h"
 #include "Math/Random.h"
 #include <fstream>
 
@@ -31,6 +33,7 @@ void Player::Update(float dt)
 	if (Core::Input::IsPressed(VK_SPACE) && m_fireTimer >= m_fireRate)
 	{
 		m_fireTimer = 0;
+		g_audioSystem.PlayAudio("Laser");
 		Projectile* projectile = new Projectile;
 		projectile->Load("projectile.txt");
 		projectile->GetTransform().position = m_transform.position;
@@ -62,12 +65,25 @@ void Player::Update(float dt)
 	if (m_transform.position.y > 900) m_transform.position.y = 0;
 	if (m_transform.position.y < 0) m_transform.position.y = 900;
 
-	if (Core::Input::IsPressed('Q')) m_transform.angle -= dt * nc::DegreesToRadians(360.0f);
-	if (Core::Input::IsPressed('E')) m_transform.angle += dt * nc::DegreesToRadians(360.0f);
+	float torque{ 0 };
+	if (Core::Input::IsPressed('Q')) torque = -20.0f;
+	if (Core::Input::IsPressed('E')) torque = 20.0f;
+
+	m_anglarVelocity = m_anglarVelocity + (torque * dt);
+	m_anglarVelocity = m_anglarVelocity * 0.9f;
+	m_transform.angle = m_transform.angle + (m_anglarVelocity * dt);
 
 	if (force.LengthSqr() > 0)
 	{
-		g_particleSystem.Create(m_transform.position, m_transform.angle + nc::PI, 10, 1, 1, nc::Color(1, 0.5, 0), 100, 200);
+		Actor* child = m_children[0];
+		g_particleSystem.Create(child->GetTransform().matrix.GetPosition(),
+								child->GetTransform().matrix.GetAngle() + nc::PI,
+								10, 1, 1, nc::Color(1, 0.5, 0), 100, 200);
+
+		child = m_children[1];
+		g_particleSystem.Create(child->GetTransform().matrix.GetPosition(),
+			child->GetTransform().matrix.GetAngle() + nc::PI,
+			10, 1, 1, nc::Color(1, 0.5, 0), 100, 200);
 	}
 
 	if (Core::Input::IsPressed('F') && !m_prevButtonPress)
@@ -79,13 +95,30 @@ void Player::Update(float dt)
 	m_prevButtonPress = Core::Input::IsPressed('F');
 
 	m_transform.Update();
+
+	//Update Children
+	for (auto child : m_children)
+	{
+		child->Update(dt);
+	}
 }
 
 void Player::OnCollision(Actor* actor)
 {
-	if (actor->GetType() == eType::ENEMY)
+	if (!m_destroy && actor->GetType() == eType::ENEMY)
 	{
-		//m_destory = true;
-		m_scene->GetGame()->SetState(Game::eState::GAME_OVER);
+		m_destroy = true;
+		m_scene->GetGame()->SetState(Game::eState::PLAYER_DEAD);
+
+		//Set target null
+		auto enemies = m_scene->GetActors<Enemy>();
+		for (auto enemy : enemies)
+		{
+			enemy->SetTarget(nullptr);
+		}
+
+		nc::Color colors[] = { nc::Color::white, nc::Color::red, nc::Color::green, {1,0.5,0 } };
+		nc::Color color = colors[rand() % 4];
+		g_particleSystem.Create({ m_transform.position }, 0, 180, 40, 1.5, color, 100, 200);
 	}
 }

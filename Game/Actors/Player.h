@@ -23,4 +23,5 @@ protected:
 	bool m_prevButtonPress { false };
 
 	nc::Vector2 m_velocity;
+	float m_anglarVelocity{ 0 };
 };

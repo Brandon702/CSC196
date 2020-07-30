@@ -39,6 +39,7 @@ namespace nc
 		{
 			if ((*iter)->IsDestory())
 			{
+				(*iter)->Destroy();
 				delete (*iter);
 				iter = m_actors.erase(iter);
 			}
